@@ -212,6 +212,16 @@
       margin-bottom: 16px;
       max-width: 540px;
     }
+    .profile__list {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+      max-width: 540px;
+      padding-left: 1.25rem;
+    }
+    .profile__list li + li {
+      margin-top: 8px;
+    }
     .profile__values {
       display: flex;
       flex-wrap: wrap;
@@ -233,13 +243,26 @@
       justify-content: center;
       align-items: center;
     }
-    .profile__logo-box {
-      background: var(--color-light);
-      border-radius: 12px;
-      padding: 48px;
+    .profile__slider {
+      position: relative;
+      width: min(100%, 420px);
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
       box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, 0.08);
     }
-    .profile__logo-box img { height: 120px; width: auto; margin: 0 auto; }
+    .profile__slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .profile__slide.is-active { opacity: 1; }
 
     /* Feature sections */
     .features { display: flex; flex-direction: column; }
@@ -353,13 +376,13 @@
       border: 3px solid var(--color-navy);
       border-radius: 8px;
       overflow: hidden;
-      aspect-ratio: 4/3;
+      aspect-ratio: 1 / 1;
       background: var(--color-light);
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .feature__image img { width: 100%; height: 100%; object-fit: cover; }
+    .feature__image img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
     .feature__image-placeholder {
       font-family: var(--font-heading);
       font-size: 1.25rem;
@@ -423,7 +446,7 @@
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 32px;
+      gap: 4px;
     }
 
     .product-card {
@@ -439,7 +462,7 @@
     }
 
     .product-card__image {
-      height: 220px;
+      aspect-ratio: 1 / 1;
       background: var(--color-navy);
       overflow: hidden;
       position: relative;
@@ -447,18 +470,20 @@
     .product-card__image img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-position: center;
       opacity: 0.85;
       transition: opacity var(--transition), transform var(--transition);
+      object-fit: cover;
     }
     .product-card:hover .product-card__image img {
       opacity: 1;
       transform: scale(1.03);
     }
     .product-card__badge {
-      position: absolute;
-      top: 16px;
-      left: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
       background: var(--color-orange);
       color: var(--color-white);
       font-family: var(--font-heading);
@@ -543,29 +568,6 @@
       transition: color var(--transition);
     }
     .contact-info__value a:hover { color: var(--color-orange); }
-
-    .social-links {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .social-link {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(4, 30, 66, 0.15);
-      border-radius: 8px;
-      color: var(--color-navy);
-      transition: background var(--transition), color var(--transition), border-color var(--transition);
-    }
-    .social-link:hover {
-      background: var(--color-orange);
-      color: var(--color-white);
-      border-color: var(--color-orange);
-    }
-    .social-link svg { width: 20px; height: 20px; }
 
     .contact-form {
       background: var(--color-white);
@@ -666,8 +668,7 @@
       .contacts-grid { grid-template-columns: 1fr; }
 
       .profile__visual { order: -1; }
-      .profile__logo-box { padding: 32px; }
-      .profile__logo-box img { height: 80px; }
+      .profile__slider { width: min(100%, 360px); }
 
       .feature__number { font-size: 3rem; top: 16px; right: 16px; }
 
@@ -741,12 +742,15 @@
             <h1 class="profile__title">Испытательное оборудование под ключ</h1>
             <p class="profile__text">
               Инженерный центр «АСК» разрабатывает и поставляет полный комплекс средств для проведения
-              механических испытаний — от разработки технического задания до пуско-наладки и постгарантийного сопровождения.
+              механических испытаний.
             </p>
-            <p class="profile__text">
-              Наша миссия — вклад в обороноспособность Отечества через инновации, профессионализм
-              и ответственность перед будущим.
-            </p>
+            <ul class="profile__list">
+              <li>разработка и утверждение технического задания на оборудования под требуемые испытания;</li>
+              <li>разработка эскизов, проектирование системы, разработка конструкторской документации;</li>
+              <li>разработка и комплектация всех агрегатов испытательного оборудования;</li>
+              <li>монтажные, пуско-наладочные работы и обучение по работе с оборудованием;</li>
+              <li>техническая поддержка, гарантийное обслуживание и постгарантийное сопровождение.</li>
+            </ul>
             <div class="profile__values">
               <span class="profile__value">Инновации</span>
               <span class="profile__value">Профессионализм</span>
@@ -754,8 +758,11 @@
             </div>
           </div>
           <div class="profile__visual">
-            <div class="profile__logo-box">
-              <img src="assets/logo-main.png" alt="Логотип ГК АСК — основная версия">
+            <div class="profile__slider" aria-label="Слайдер изображений">
+              <img class="profile__slide is-active" src="assets/img_4_1280x853.jpeg" alt="Слайд 1">
+              <img class="profile__slide" src="assets/img_5_1331x749.jpeg" alt="Слайд 2">
+              <img class="profile__slide" src="assets/img_6_1170x780.jpeg" alt="Слайд 3">
+              <img class="profile__slide" src="assets/img_8_1248x832.jpeg" alt="Слайд 4">
             </div>
           </div>
         </div>
@@ -781,7 +788,7 @@
           </div>
         </article>
 
-        <article class="feature" tabindex="0" role="link" data-nav="solutions" aria-label="Оборудование для строительной и железнодорожной отраслей">
+        <article class="feature" tabindex="0" role="link" data-nav="products" aria-label="Оборудование для строительной и железнодорожной отраслей">
           <div class="feature__inner">
             <span class="feature__number" aria-hidden="true">02</span>
             <div>
@@ -792,7 +799,7 @@
                   <li>Стендовое оборудование для отраслевых стандартов</li>
                 </ul>
               </div>
-              <span class="feature__cta">Смотреть решения →</span>
+              <span class="feature__cta">Перейти к продукции →</span>
             </div>
             <div class="feature__icon-wrap">
               <svg class="feature__icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
@@ -820,7 +827,7 @@
           </div>
         </article>
 
-        <article class="feature" tabindex="0" role="link" data-nav="services" aria-label="Комплексные решения под ключ">
+        <article class="feature" tabindex="0" role="link" data-nav="products" aria-label="Комплексные решения под ключ">
           <div class="feature__inner">
             <span class="feature__number" aria-hidden="true">04</span>
             <div>
@@ -832,7 +839,7 @@
                   <li>Техническая поддержка и гарантийное обслуживание</li>
                 </ul>
               </div>
-              <span class="feature__cta">Узнать об услугах →</span>
+              <span class="feature__cta">Перейти к продукции →</span>
             </div>
             <div class="feature__icon-wrap">
               <svg class="feature__icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
@@ -874,9 +881,9 @@
           <article class="product-card">
             <div class="product-card__image">
               <img src="assets/equipment-page-2.png" alt="Универсальный измерительно-управляющий комплекс АИС-1">
-              <span class="product-card__badge">АИС-1</span>
             </div>
             <div class="product-card__body">
+              <span class="product-card__badge">АИС-1</span>
               <h2 class="product-card__title">УИУК «АИС-1»</h2>
               <p class="product-card__desc">
                 Предназначен для управления испытательным оборудованием и измерения физических величин
@@ -894,9 +901,9 @@
           <article class="product-card">
             <div class="product-card__image">
               <img src="assets/equipment-page-3.png" alt="Испытательный стенд">
-              <span class="product-card__badge">Стенды</span>
             </div>
             <div class="product-card__body">
+              <span class="product-card__badge">СТЕНДЫ</span>
               <h2 class="product-card__title">Испытательные стенды</h2>
               <p class="product-card__desc">
                 Решение для подтверждения заявленных характеристик изделия при имитации
@@ -914,9 +921,9 @@
           <article class="product-card">
             <div class="product-card__image">
               <img src="assets/equipment-page-4.png" alt="Универсальная испытательная машина АИС-2">
-              <span class="product-card__badge">АИС-2</span>
             </div>
             <div class="product-card__body">
+              <span class="product-card__badge">АИС-2</span>
               <h2 class="product-card__title">Испытательные машины «АИС-2»</h2>
               <p class="product-card__desc">
                 Сервогидравлические и электромеханические машины для механических испытаний материалов
@@ -983,26 +990,6 @@
               <p class="contact-info__label">Часы работы</p>
               <p class="contact-info__value">с 09:00 до 18:00, Пн–Пт</p>
             </div>
-            <div class="contact-info__block">
-              <p class="contact-info__label">Социальные сети</p>
-              <div class="social-links">
-                <a href="#" class="social-link" aria-label="Telegram" title="Telegram">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                  </svg>
-                </a>
-                <a href="#" class="social-link" aria-label="ВКонтакте" title="ВКонтакте">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12.785 16.241s.288-.032.436-.194c.136-.148.132-.427.132-.427s-.02-1.304.587-1.496c.598-.187 1.366 1.258 2.183 1.814.615.422 1.082.329 1.082.329l2.177-.03s1.138-.071.598-.967c-.044-.073-.314-.662-1.618-1.875-1.366-1.27-1.183-1.064.462-3.258.999-1.33 1.398-2.142 1.273-2.492-.118-.332-.848-.244-.848-.244l-2.451.015s-.182-.025-.317.056c-.131.079-.214.262-.214.262s-.385 1.023-.897 1.893c-1.076 1.829-1.508 1.926-1.683 1.814-.409-.264-.307-1.062-.307-1.628 0-1.771.267-2.51-.521-2.701-.262-.063-.454-.105-1.124-.112-.859-.009-1.585.003-1.994.207-.273.134-.483.433-.355.45.158.022.516.097.705.355.245.334.236 1.084.236 1.084s.141 2.088-.329 2.347c-.323.178-.766-.185-1.717-1.848-.486-.848-.853-1.787-.853-1.787s-.071-.174-.198-.267c-.154-.113-.369-.149-.369-.149l-2.331.015s-.35.01-.479.161c-.115.135-.009.414-.009.414s1.832 4.288 3.905 6.449c1.902 1.985 4.061 1.854 4.061 1.854h.973z"/>
-                  </svg>
-                </a>
-                <a href="#" class="social-link" aria-label="YouTube" title="YouTube">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
-                  </svg>
-                </a>
-              </div>
-            </div>
           </div>
 
           <form class="contact-form" id="contactForm" novalidate>
@@ -1042,8 +1029,24 @@
       const nav = document.getElementById('nav');
       const contactForm = document.getElementById('contactForm');
       const formSuccess = document.getElementById('formSuccess');
+      const profileSlides = document.querySelectorAll('.profile__slide');
 
       let currentPage = 'home';
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        profileSlides.forEach(function (slide, slideIndex) {
+          slide.classList.toggle('is-active', slideIndex === index);
+        });
+      }
+
+      if (profileSlides.length > 0) {
+        showSlide(0);
+        setInterval(function () {
+          currentSlide = (currentSlide + 1) % profileSlides.length;
+          showSlide(currentSlide);
+        }, 5000);
+      }
 
       function navigateTo(pageId, pushState = true) {
         if (!document.querySelector('[data-page="' + pageId + '"]')) return;
