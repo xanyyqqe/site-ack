@@ -467,6 +467,15 @@
       overflow: hidden;
       position: relative;
     }
+    .product-card__image-btn {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: zoom-in;
+    }
     .product-card__image img {
       width: 100%;
       height: 100%;
@@ -476,6 +485,14 @@
       object-fit: cover;
     }
     .product-card:hover .product-card__image img {
+      opacity: 1;
+      transform: scale(1.03);
+    }
+    .product-card__image-btn:focus-visible {
+      outline: 3px solid var(--color-orange);
+      outline-offset: -3px;
+    }
+    .product-card__image-btn:hover img {
       opacity: 1;
       transform: scale(1.03);
     }
@@ -542,6 +559,67 @@
       transition: gap var(--transition);
     }
     .product-card__link:hover { gap: 12px; }
+
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(4, 30, 66, 0.78);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition), visibility var(--transition);
+    }
+    .image-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .image-modal__dialog {
+      position: relative;
+      width: min(92vw, 1120px);
+      max-height: 90vh;
+      display: grid;
+      gap: 12px;
+    }
+    .image-modal__close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: var(--color-white);
+      color: var(--color-navy);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .image-modal__close:focus-visible {
+      outline: 3px solid var(--color-orange);
+      outline-offset: 2px;
+    }
+    .image-modal__image {
+      width: 100%;
+      max-height: calc(90vh - 72px);
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .image-modal__caption {
+      justify-self: center;
+      color: var(--color-white);
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: center;
+    }
 
     /* Contacts */
     .contacts-grid {
@@ -754,7 +832,7 @@
             <div class="profile__values">
               <span class="profile__value">Инновации</span>
               <span class="profile__value">Профессионализм</span>
-              <span class="profile__value">Единство цели</span>
+              <span class="profile__value">Технологичность</span>
             </div>
           </div>
           <div class="profile__visual">
@@ -880,7 +958,9 @@
         <div class="products-grid">
           <article class="product-card">
             <div class="product-card__image">
-              <img src="assets/equipment-page-2.png" alt="Универсальный измерительно-управляющий комплекс АИС-1">
+              <button type="button" class="product-card__image-btn" data-image-src="assets/equipment-page-2.png" data-image-alt="Универсальный измерительно-управляющий комплекс АИС-1" aria-label="Открыть изображение: Универсальный измерительно-управляющий комплекс АИС-1">
+                <img src="assets/equipment-page-2.png" alt="Универсальный измерительно-управляющий комплекс АИС-1">
+              </button>
             </div>
             <div class="product-card__body">
               <span class="product-card__badge">АИС-1</span>
@@ -900,7 +980,9 @@
 
           <article class="product-card">
             <div class="product-card__image">
-              <img src="assets/equipment-page-3.png" alt="Испытательный стенд">
+              <button type="button" class="product-card__image-btn" data-image-src="assets/equipment-page-3.png" data-image-alt="Испытательный стенд" aria-label="Открыть изображение: Испытательный стенд">
+                <img src="assets/equipment-page-3.png" alt="Испытательный стенд">
+              </button>
             </div>
             <div class="product-card__body">
               <span class="product-card__badge">СТЕНДЫ</span>
@@ -920,7 +1002,9 @@
 
           <article class="product-card">
             <div class="product-card__image">
-              <img src="assets/equipment-page-4.png" alt="Универсальная испытательная машина АИС-2">
+              <button type="button" class="product-card__image-btn" data-image-src="assets/equipment-page-4.png" data-image-alt="Универсальная испытательная машина АИС-2" aria-label="Открыть изображение: Универсальная испытательная машина АИС-2">
+                <img src="assets/equipment-page-4.png" alt="Универсальная испытательная машина АИС-2">
+              </button>
             </div>
             <div class="product-card__body">
               <span class="product-card__badge">АИС-2</span>
@@ -1014,6 +1098,14 @@
     </section>
   </main>
 
+  <div class="image-modal" id="imageModal" hidden>
+    <div class="image-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="imageModalCaption">
+      <button type="button" class="image-modal__close" id="imageModalClose" aria-label="Закрыть изображение">&times;</button>
+      <img class="image-modal__image" id="imageModalImage" alt="">
+      <p class="image-modal__caption" id="imageModalCaption"></p>
+    </div>
+  </div>
+
   <footer class="footer" role="contentinfo">
     <p>© 2026 <strong>Инженерный центр «АСК»</strong> — входит в <strong>Группу компаний АСК</strong></p>
   </footer>
@@ -1030,9 +1122,14 @@
       const contactForm = document.getElementById('contactForm');
       const formSuccess = document.getElementById('formSuccess');
       const profileSlides = document.querySelectorAll('.profile__slide');
+      const imageModal = document.getElementById('imageModal');
+      const imageModalImage = document.getElementById('imageModalImage');
+      const imageModalCaption = document.getElementById('imageModalCaption');
+      const imageModalClose = document.getElementById('imageModalClose');
 
       let currentPage = 'home';
       let currentSlide = 0;
+      let lastFocusedElement = null;
 
       function showSlide(index) {
         profileSlides.forEach(function (slide, slideIndex) {
@@ -1076,6 +1173,44 @@
         nav.classList.remove('open');
       }
 
+      function openImageModal(button) {
+        var imageSrc = button.getAttribute('data-image-src');
+        var imageAlt = button.getAttribute('data-image-alt') || '';
+
+        if (!imageSrc) return;
+
+        lastFocusedElement = document.activeElement;
+        imageModalImage.src = imageSrc;
+        imageModalImage.alt = imageAlt;
+        imageModalCaption.textContent = imageAlt;
+        imageModal.hidden = false;
+
+        requestAnimationFrame(function () {
+          imageModal.classList.add('is-open');
+        });
+
+        document.body.style.overflow = 'hidden';
+        imageModalClose.focus();
+      }
+
+      function closeImageModal() {
+        if (imageModal.hidden) return;
+
+        imageModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+
+        window.setTimeout(function () {
+          imageModal.hidden = true;
+          imageModalImage.src = '';
+          imageModalImage.alt = '';
+          imageModalCaption.textContent = '';
+        }, 200);
+
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+          lastFocusedElement.focus();
+        }
+      }
+
       navLinks.forEach(function (el) {
         el.addEventListener('click', function (e) {
           var target = el.dataset.nav;
@@ -1096,6 +1231,24 @@
             navigateTo(feature.dataset.nav);
           }
         });
+      });
+
+      document.querySelectorAll('.product-card__image-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+          openImageModal(button);
+        });
+      });
+
+      imageModal.addEventListener('click', function (e) {
+        if (e.target === imageModal || e.target === imageModalClose) {
+          closeImageModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !imageModal.hidden) {
+          closeImageModal();
+        }
       });
 
       burger.addEventListener('click', function () {
